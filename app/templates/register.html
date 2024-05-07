@@ -24,25 +24,35 @@
 
     <section class="login-page">
       <h2>Załóż konto</h2>
-      <form>
+        {% if form.errors %}
+          <div class="message error">
+            {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+                {{ error }}<br>
+              {% endfor %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      <form action="" method="post">
+          {% csrf_token %}
         <div class="form-group">
-          <input type="text" name="name" placeholder="Imię" />
+            {{ form.first_name }}
         </div>
          <div class="form-group">
-          <input type="text" name="surname" placeholder="Nazwisko" />
+             {{ form.last_name }}
         </div>
         <div class="form-group">
-          <input type="email" name="email" placeholder="Email" />
+            {{ form.username }}
         </div>
         <div class="form-group">
-          <input type="password" name="password" placeholder="Hasło" />
+            {{ form.password1 }}
         </div>
         <div class="form-group">
-          <input type="password" name="password2" placeholder="Powtórz hasło" />
+            {{ form.password2 }}
         </div>
 
         <div class="form-group form-group--buttons">
-          <a href="login.html" class="btn btn--without-border">Zaloguj się</a>
+          <a href="{% url 'login' %}" class="btn btn--without-border">Zaloguj się</a>
           <button class="btn" type="submit">Załóż konto</button>
         </div>
       </form>
