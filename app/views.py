@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.shortcuts import render, redirect
@@ -59,6 +60,15 @@ class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = "register.html"
     success_url = reverse_lazy("login")
+
+
+class LogoutView(LoginRequiredMixin, View):
+    login_url = "login"
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect("landing_page")
+
 
 
 
