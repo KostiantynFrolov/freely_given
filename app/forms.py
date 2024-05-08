@@ -19,4 +19,11 @@ class RegisterForm(UserCreationForm):
         self.fields["password2"].widget.attrs["placeholder"] = "Powtórz hasło"
 
 
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs["placeholder"] = "Email"
+        self.fields["password"].widget.attrs["placeholder"] = "Hasło"
