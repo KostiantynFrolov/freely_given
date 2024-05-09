@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView
 from .forms import RegisterForm, LoginForm
-from .models import Donation, Institution
+from .models import Donation, Institution, Category
 
 
 class LandingPageView(View):
@@ -25,9 +25,11 @@ class LandingPageView(View):
                                               "local_collections_all": local_collections_all})
 
 
-class AddDonationView(View):
+class AddDonationView(LoginRequiredMixin, View):
+    login_url = "register"
     def get(self, request, *args, **kwargs):
-        return render(request, "form.html")
+        categories_all = Category.objects.all()
+        return render(request, "form.html", {"categories_all": categories_all})
 
 
 class LoginView(View):
