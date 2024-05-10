@@ -72,6 +72,52 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   /**
+   * Checkbox Listener
+   */
+  class CheckboxListener {
+    constructor(selector, onChangeCallback) {
+      this.$checkboxes = document.querySelectorAll(selector);
+      this.checkedValues = [];
+      this.onChangeCallback = onChangeCallback;
+      this.init();
+    }
+
+    init() {
+      this.$checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          this.checkedValues.push(checkbox.value);
+        }
+        checkbox.addEventListener("change", (event) => {
+          if (event.target.checked) {
+            this.checkedValues.push(event.target.value);
+          } else {
+            const index = this.checkedValues.indexOf(event.target.value);
+            if (index !== -1) {
+              this.checkedValues.splice(index, 1);
+            }
+          }
+          this.onChangeCallback();
+        });
+      });
+    }
+  }
+  const toggleInstitutionVisibility = function () {
+    document.querySelectorAll(".form-group--checkbox-step3").
+    forEach(function (institutionDiv) {
+      const institutionCategories = institutionDiv.dataset.categories
+          ? institutionDiv.dataset.categories.split(','):[];
+      if (institutionCategories.some(category => checkboxListener.checkedValues.includes(category))) {
+        institutionDiv.style.display = "block";
+      } else {
+        institutionDiv.style.display = "none";
+      }
+    });
+  };
+  const checkboxListener = new CheckboxListener("input[name='categories']",
+      toggleInstitutionVisibility);
+  toggleInstitutionVisibility()
+
+  /**
    * Form Select
    */
   class FormSelect {
@@ -198,6 +244,9 @@ document.addEventListener("DOMContentLoaded", function() {
           e.preventDefault();
           this.currentStep++;
           this.updateForm();
+          /**if (this.currentStep === 3) {
+            toggleInstitutionVisibility()
+          }*/
         });
       });
 
@@ -253,3 +302,4 @@ document.addEventListener("DOMContentLoaded", function() {
     new FormSteps(form);
   }
 });
+

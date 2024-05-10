@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -26,10 +27,12 @@ class LandingPageView(View):
 
 
 class AddDonationView(LoginRequiredMixin, View):
-    login_url = "register"
+    login_url = "login"
     def get(self, request, *args, **kwargs):
         categories_all = Category.objects.all()
-        return render(request, "form.html", {"categories_all": categories_all})
+        institutions_all = Institution.objects.all()
+        return render(request, "form.html", {"categories_all": categories_all,
+                                             "institutions_all": institutions_all})
 
 
 class LoginView(View):
