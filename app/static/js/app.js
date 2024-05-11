@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$stepInstructions = form.querySelectorAll(".form--steps-instructions p");
       const $stepForms = form.querySelectorAll("form > div");
       this.slides = [...this.$stepInstructions, ...$stepForms];
-
+      this.formData = {}
       this.init();
     }
 
@@ -241,12 +241,59 @@ document.addEventListener("DOMContentLoaded", function() {
       // Next step
       this.$next.forEach(btn => {
         btn.addEventListener("click", e => {
-          e.preventDefault();
-          this.currentStep++;
+            e.preventDefault();
+            this.currentStep++;
+          if (this.currentStep === 2) {
+            let selectedCategories = this.$form.querySelectorAll("input[name='categories']:checked");
+            this.formData.categories = selectedCategories.length > 0 ?
+                Array.from(selectedCategories).map(checkbox => checkbox.value).join(", ") : "";
+            }
+          if (this.currentStep === 3) {
+            this.formData.bags = this.$form.querySelector("input[name='bags']").value;
+          }
+         if (this.currentStep === 4) {
+            let selectedOrganization = document.querySelector("input[name='organization']:checked");
+            if (selectedOrganization) {
+              let selectedInstitutionDiv = selectedOrganization.parentNode;
+              let institutionName = selectedInstitutionDiv.querySelector(".title").innerText;
+              this.formData.institution = institutionName;
+            } else {
+              this.formData.institution = "";
+            }
+          }
+          if (this.currentStep === 5) {
+            this.formData.street = this.$form.querySelector("input[name='address']").value;
+            this.formData.city = this.$form.querySelector("input[name='city']").value;
+            this.formData.postcode = this.$form.querySelector("input[name='postcode']").value;
+            this.formData.phone = this.$form.querySelector("input[name='phone']").value;
+            this.formData.date = this.$form.querySelector("input[name='data']").value;
+            this.formData.time = this.$form.querySelector("input[name='time']").value;
+            this.formData.info = this.$form.querySelector("textarea[name='more_info']").value;
+
+            let bagsText = "";
+            switch (true) {
+              case this.formData.bags == 1:
+                bagsText = " worek";
+                break;
+              case this.formData.bags >= 2 && this.formData.bags <= 4:
+                bagsText = " worki";
+                break;
+              default:
+                bagsText = " worków";
+            }
+            document.getElementById("bags-summary").innerHTML =
+                "Oddajesz: " + this.formData.categories + " - " + this.formData.bags + bagsText;
+            document.getElementById("institution-summary").innerHTML =
+                "Odbiorca: " + this.formData.institution;
+            document.getElementById("pick-up-street").innerHTML = this.formData.street;
+            document.getElementById("pick-up-city").innerHTML = this.formData.city;
+            document.getElementById("pick-up-postcode").innerHTML = this.formData.postcode;
+            document.getElementById("pick-up-phone").innerHTML = this.formData.phone;
+            document.getElementById("pick-up-date").innerHTML = this.formData.date;
+            document.getElementById("pick-up-time").innerHTML = this.formData.time;
+            document.getElementById("pick-up-info").innerHTML = this.formData.info;
+          }
           this.updateForm();
-          /**if (this.currentStep === 3) {
-            toggleInstitutionVisibility()
-          }*/
         });
       });
 
@@ -255,10 +302,36 @@ document.addEventListener("DOMContentLoaded", function() {
         btn.addEventListener("click", e => {
           e.preventDefault();
           this.currentStep--;
+          if (this.currentStep === 1) {
+            let selectedCategories = this.$form.querySelectorAll("input[name='categories']:checked");
+            this.formData.categories = selectedCategories.length > 0 ?
+                Array.from(selectedCategories).map(checkbox => checkbox.value).join(", ") : "";
+            }
+          if (this.currentStep === 2) {
+            this.formData.bags = this.$form.querySelector("input[name='bags']").value;
+          }
+          if (this.currentStep === 3) {
+            let selectedOrganization = document.querySelector("input[name='organization']:checked")
+            if (selectedOrganization) {
+              let selectedInstitutionDiv = selectedOrganization.parentNode;
+              let institutionName = selectedInstitutionDiv.querySelector(".title").innerText;
+              this.formData.institution = institutionName;
+            } else {
+              this.formData.institution = "";
+            }
+          }
+          if (this.currentStep === 4) {
+            this.formData.street = this.$form.querySelector("input[name='address']").value;
+            this.formData.city = this.$form.querySelector("input[name='city']").value;
+            this.formData.postcode = this.$form.querySelector("input[name='postcode']").value;
+            this.formData.phone = this.$form.querySelector("input[name='phone']").value;
+            this.formData.date = this.$form.querySelector("input[name='data']").value;
+            this.formData.time = this.$form.querySelector("input[name='time']").value;
+            this.formData.info = this.$form.querySelector("textarea[name='more_info']").value;
+          }
           this.updateForm();
         });
       });
-
       // Form submit
       this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
     }
