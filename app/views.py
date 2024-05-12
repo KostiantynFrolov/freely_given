@@ -28,11 +28,27 @@ class LandingPageView(View):
 
 class AddDonationView(LoginRequiredMixin, View):
     login_url = "login"
+
     def get(self, request, *args, **kwargs):
         categories_all = Category.objects.all()
         institutions_all = Institution.objects.all()
         return render(request, "form.html", {"categories_all": categories_all,
                                              "institutions_all": institutions_all})
+
+    def post(self, request, *args, **kwargs):
+        your_donation = Donation.objects.create(
+            quantity=int(request.POST["bags"]),
+            institution=Institution.objects.get(id=int(request.POST["organization"])),
+            address=request.POST["address"],
+            phone_number=request.POST["phone"],
+            city=request.POST["city"],
+            zip_code=request.POST["postcode"],
+            pick_up_date=request.POST["data"],
+            pick_up_time=request.POST["time"],
+            pick_up_comment=request.POST["more_info"],
+            user=request.user
+            )
+        return render(request, "form-confirmation.html")
 
 
 class LoginView(View):

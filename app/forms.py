@@ -27,3 +27,5 @@ class LoginForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields["username"].widget.attrs["placeholder"] = "Email"
         self.fields["password"].widget.attrs["placeholder"] = "Hasło"
+
+

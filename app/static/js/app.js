@@ -333,7 +333,13 @@ document.addEventListener("DOMContentLoaded", function() {
         });
       });
       // Form submit
-      this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
+      this.$form.querySelector("form").addEventListener("submit", e => {
+        if (this.currentStep < 5) {
+          e.preventDefault();
+          this.currentStep++;
+          this.updateForm();
+        }
+      });
     }
 
     /**
