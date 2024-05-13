@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView
+from django.views.generic import CreateView, TemplateView
 from .forms import RegisterForm, LoginForm
 from .models import Donation, Institution, Category
 
@@ -89,6 +89,13 @@ class LogoutView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect("landing_page")
+
+
+class UserView(LoginRequiredMixin, TemplateView):
+    login_url = "login"
+    template_name = "user.html"
+
+
 
 
 
