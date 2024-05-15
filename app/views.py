@@ -104,9 +104,11 @@ class UserView(LoginRequiredMixin, View):
         user_donated_institutions_id = user_donations.values_list("institution", flat=True)
         user_donated_institutions = Institution.objects.filter(pk__in=user_donated_institutions_id)
         user_donated_categories = Category.objects.filter(donation__in=user_donations).distinct()
+        user_donations_pick_up_dates = user_donations.values_list("pick_up_date", flat=True)
         return render(request, self.html, {"user_donated_bags_sum": user_donated_bags_sum,
                                            "user_donated_institutions": user_donated_institutions,
-                                           "user_donated_categories": user_donated_categories})
+                                           "user_donated_categories": user_donated_categories,
+                                           "user_donations_pick_up_dates": user_donations_pick_up_dates})
 
 
 

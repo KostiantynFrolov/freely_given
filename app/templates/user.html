@@ -26,7 +26,7 @@
       </nav>
 
       <div class="slogan container container--90">
-        <h2>
+        <h3 style="font-size: 20px;">
           {% if user.first_name %}
               <p>Imię:{{ user.first_name }}</p>
           {% endif %}
@@ -35,7 +35,7 @@
           {% endif %}
             <p>email: {{ user.username }}</p>
           {% if user_donated_bags_sum %}
-              <p>Przekazane worków: {{ user_donated_bags_sum }}</p>
+              <p>Oddanych worków: {{ user_donated_bags_sum }}</p>
           {% endif %}
           {% if user_donated_institutions %}
             <p>Wsparte organizacji:<br>
@@ -49,8 +49,14 @@
               {{ category.name }}
             {% endfor %}</p>
           {% endif %}
-      </h2>
-    </div>
+          {% if user_donations_pick_up_dates %}
+            <p>Daty odbioru:<br>
+            {% for date in user_donations_pick_up_dates %}
+              {{ date|date:"d-m-Y" }}<br>
+            {% endfor %}</p>
+          {% endif %}
+        </h3>
+      </div>
     </header>
   </body>
 </html>
