@@ -28,12 +28,27 @@
       <div class="slogan container container--90">
         <h2>
           {% if user.first_name %}
-            Imię:{{ user.first_name }}<br>
+              <p>Imię:{{ user.first_name }}</p>
           {% endif %}
           {% if user.last_name %}
-            Nazwisko: {{ user.last_name }}<br>
+              <p>Nazwisko: {{ user.last_name }}</p>
           {% endif %}
-          email: {{ user.username }}
+            <p>email: {{ user.username }}</p>
+          {% if user_donated_bags_sum %}
+              <p>Przekazane worków: {{ user_donated_bags_sum }}</p>
+          {% endif %}
+          {% if user_donated_institutions %}
+            <p>Wsparte organizacji:<br>
+            {% for institution in user_donated_institutions %}
+              {{ institution.name }}<br>
+            {% endfor %}</p>
+          {% endif %}
+          {% if user_donated_categories %}
+            <p>Kategorii:
+            {% for category in user_donated_categories %}
+              {{ category.name }}
+            {% endfor %}</p>
+          {% endif %}
       </h2>
     </div>
     </header>

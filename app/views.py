@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView
 from .forms import RegisterForm, LoginForm
 from .models import Donation, Institution, Category
 
@@ -48,6 +48,9 @@ class AddDonationView(LoginRequiredMixin, View):
             pick_up_comment=request.POST["more_info"],
             user=request.user
             )
+        selected_categories_names = request.POST.getlist("categories")
+        selected_categories = Category.objects.filter(name__in=selected_categories_names)
+        your_donation.categories.set(selected_categories)
         return render(request, "form-confirmation.html")
 
 
@@ -91,9 +94,19 @@ class LogoutView(LoginRequiredMixin, View):
         return redirect("landing_page")
 
 
-class UserView(LoginRequiredMixin, TemplateView):
+class UserView(LoginRequiredMixin, View):
     login_url = "login"
-    template_name = "user.html"
+    html = "user.html"
+
+    def get(self, request, *args, **kwargs):
+        user_donations = Donation.objects.filter(user=self.request.user)
+        user_donated_bags_sum = user_donations.aggregate(Sum("quantity"))["quantity__sum"]
+        user_donated_institutions_id = user_donations.values_list("institution", flat=True)
+        user_donated_institutions = Institution.objects.filter(pk__in=user_donated_institutions_id)
+        user_donated_categories = Category.objects.filter(donation__in=user_donations).distinct()
+        return render(request, self.html, {"user_donated_bags_sum": user_donated_bags_sum,
+                                           "user_donated_institutions": user_donated_institutions,
+                                           "user_donated_categories": user_donated_categories})
 
 
 
