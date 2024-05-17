@@ -100,15 +100,15 @@ class UserView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         user_donations = Donation.objects.filter(user=self.request.user)
-        user_donated_bags_sum = user_donations.aggregate(Sum("quantity"))["quantity__sum"]
-        user_donated_institutions_id = user_donations.values_list("institution", flat=True)
-        user_donated_institutions = Institution.objects.filter(pk__in=user_donated_institutions_id)
-        user_donated_categories = Category.objects.filter(donation__in=user_donations).distinct()
-        user_donations_pick_up_dates = user_donations.values_list("pick_up_date", flat=True)
-        return render(request, self.html, {"user_donated_bags_sum": user_donated_bags_sum,
-                                           "user_donated_institutions": user_donated_institutions,
-                                           "user_donated_categories": user_donated_categories,
-                                           "user_donations_pick_up_dates": user_donations_pick_up_dates})
+        return render(request, self.html, {"user_donations": user_donations})
+
+    def post(self, request, *args, **kwargs):
+        user_donation = Donation.objects.get(pk=request.POST["don_id"])
+        user_donation.is_taken = True if request.POST["status"] == "False" else False
+        user_donation.save()
+        user_donations = Donation.objects.filter(user=self.request.user)
+        return render(request, self.html, {"user_donations": user_donations})
+
 
 
 

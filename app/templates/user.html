@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   </head>
   <body>
-    <header class="header--main-page">
+    <header class="header--form-page">
       <nav class="container container--70">
         <ul class="nav--actions">
         </ul>
@@ -25,37 +25,49 @@
         </ul>
       </nav>
 
-      <div class="slogan container container--90">
-        <h3 style="font-size: 20px;">
+      <div class="slogan container container--70">
+        <h3 style="font-size: 16px;">
           {% if user.first_name %}
-              <p>Imię:{{ user.first_name }}</p>
+            <p>Imię:{{ user.first_name }}</p>
           {% endif %}
           {% if user.last_name %}
-              <p>Nazwisko: {{ user.last_name }}</p>
+            <p>Nazwisko: {{ user.last_name }}</p>
           {% endif %}
             <p>email: {{ user.username }}</p>
-          {% if user_donated_bags_sum %}
-              <p>Oddanych worków: {{ user_donated_bags_sum }}</p>
-          {% endif %}
-          {% if user_donated_institutions %}
-            <p>Wsparte organizacji:<br>
-            {% for institution in user_donated_institutions %}
-              {{ institution.name }}<br>
-            {% endfor %}</p>
-          {% endif %}
-          {% if user_donated_categories %}
-            <p>Kategorii:
-            {% for category in user_donated_categories %}
-              {{ category.name }}
-            {% endfor %}</p>
-          {% endif %}
-          {% if user_donations_pick_up_dates %}
-            <p>Daty odbioru:<br>
-            {% for date in user_donations_pick_up_dates %}
-              {{ date|date:"d-m-Y" }}<br>
-            {% endfor %}</p>
-          {% endif %}
         </h3>
+        {% if user_donations %}
+          <table>
+            <thead>
+              <tr>
+                <th>Liczba 60l worków</th>
+                <th>Organizacja, której chcesz pomóc</th>
+                <th>Kategorii</th>
+                <th>Data odbioru</th>
+                <th>Stan</th>
+                <th>Zmiana stanu</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for donation in user_donations %}
+                <tr {% if donation.is_taken == True %} class="taken"{% endif %}>
+                  <td>{{ donation.quantity }}</td>
+                  <td>{{ donation.institution.name }}</td>
+                  <td>{{ donation.categories.all|join:", " }}</td>
+                  <td>{{ donation.pick_up_date|date:"d-m-Y" }}</td>
+                  <td>{% if donation.is_taken == False %}Niezabrany{% else %}Zabrany{% endif %}</td>
+                  <td>
+                    <form action="" method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="don_id" value="{{ donation.id }}">
+                      <input type="hidden" name="status" value="{{ donation.is_taken }}">
+                      <button type="submit">Zmień</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
       </div>
     </header>
   </body>
