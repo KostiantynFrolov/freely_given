@@ -42,4 +42,4 @@ class Donation(models.Model):
     is_taken = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ["is_taken"]
+        ordering = ["is_taken", "pick_up_date"]

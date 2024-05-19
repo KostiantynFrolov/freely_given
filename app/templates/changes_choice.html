@@ -1,0 +1,36 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Changes choice</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body>
+    <header>
+      <nav class="container container--70">
+        <ul class="nav--actions">
+        </ul>
+
+        <ul>
+          <li><a href="{% url 'landing_page' %}">Start</a></li>
+          <li><a href="{% url 'landing_page' %}#steps">O co chodzi?</a></li>
+          <li><a href="{% url 'landing_page' %}#about-us">O nas</a></li>
+          <li><a href="{% url 'landing_page' %}#help">Fundacje i organizacje</a></li>
+          <li><a href="{% url 'landing_page' %}#contact">Kontakt</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="login-page">
+      <h2>Wybierz, co chcesz zmienić</h2>
+      <div class="form-group">
+        <a href="{% url 'change_user_data' %}" class="btn">Zmienić dane personalne</a>
+        <a href="{% url 'change_user_password' %}" class="btn">Zmienić hasło</a>
+      </div>
+    </section>
+  </body>
+</html>

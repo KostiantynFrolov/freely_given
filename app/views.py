@@ -1,14 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordChangeView
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils import translation
 from django.views import View
-from django.views.generic import CreateView
-from .forms import RegisterForm, LoginForm
+from django.views.generic import CreateView, UpdateView, FormView
+from .forms import RegisterForm, LoginForm, PasswordConfirmForm
 from .models import Donation, Institution, Category
 
 
@@ -94,9 +97,9 @@ class LogoutView(LoginRequiredMixin, View):
         return redirect("landing_page")
 
 
-class UserView(LoginRequiredMixin, View):
+class UserPageView(LoginRequiredMixin, View):
     login_url = "login"
-    html = "user.html"
+    html = "user_page.html"
 
     def get(self, request, *args, **kwargs):
         user_donations = Donation.objects.filter(user=self.request.user)
@@ -108,6 +111,51 @@ class UserView(LoginRequiredMixin, View):
         user_donation.save()
         user_donations = Donation.objects.filter(user=self.request.user)
         return render(request, self.html, {"user_donations": user_donations})
+
+
+class PasswordConfirmView(LoginRequiredMixin, FormView):
+    form_class = PasswordConfirmForm
+    template_name = "password-confirm.html"
+
+    def form_valid(self, form):
+        password = form.cleaned_data.get("password")
+        user = self.request.user
+        if check_password(password, user.password):
+            return render(self.request, "changes_choice.html")
+        else:
+            messages.error(self.request, "Nieprawidłowe hasło. Spróbuj ponownie.")
+            return self.form_invalid(form)
+
+
+class ChangeUserDataView(LoginRequiredMixin, UpdateView):
+    login_url = "login"
+    model = User
+    fields = ["username", "first_name", "last_name"]
+    template_name = "change_user_data.html"
+    success_url = reverse_lazy("user_page")
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
+class ChangeUserPasswordView(LoginRequiredMixin, PasswordChangeView):
+    template_name = "change_user_password.html"
+    success_url = reverse_lazy("user_page")
+
+    def get(self, request, *args, **kwargs):
+        translation.activate("pl")
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        translation.activate("pl")
+        return super().post(request, *args, **kwargs)
+
+
+
+
+
+
+
 
 
 
