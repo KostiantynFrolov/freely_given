@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   </head>
   <body>
-    <header>
+    <header class="header--form-page">
       <nav class="container container--70">
         <ul class="nav--actions">
         </ul>
@@ -23,14 +23,14 @@
           <li><a href="{% url 'landing_page' %}#contact">Kontakt</a></li>
         </ul>
       </nav>
-    </header>
 
-    <section class="login-page">
-      <h2>Wybierz, co chcesz zmienić</h2>
-      <div class="form-group">
-        <a href="{% url 'change_user_data' %}" class="btn">Zmienić dane personalne</a>
-        <a href="{% url 'change_user_password' %}" class="btn">Zmienić hasło</a>
+      <div class="login-page">
+        <h2>Wybierz, co chcesz zmienić</h2>
+        <div class="form-group">
+          <a href="{% url 'change_user_data' %}" class="btn">Zmienić dane personalne</a>
+          <a href="{% url 'change_user_password' %}" class="btn">Zmienić hasło</a>
+        </div>
       </div>
-    </section>
+    </header>
   </body>
 </html>

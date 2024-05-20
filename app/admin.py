@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
+
 from app.models import Institution
+
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ("username", "first_name", "last_name", "is_superuser")

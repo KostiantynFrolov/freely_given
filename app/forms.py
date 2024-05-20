@@ -33,11 +33,3 @@ class LoginForm(PasswordConfirmForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["username"].widget.attrs["placeholder"] = "Email"
-
-
-
-
-
-
-
-
