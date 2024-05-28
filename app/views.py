@@ -12,6 +12,7 @@ from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 
 from .forms import LoginForm, PasswordConfirmForm, RegisterForm
+from .emails import send_confirmational_email
 from .models import Category, Donation, Institution
 
 
@@ -91,7 +92,7 @@ class LoginView(View):
 class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = "register.html"
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("landing_page")
 
     def get(self, request, *args, **kwargs):
         translation.activate("pl")
@@ -100,6 +101,11 @@ class RegisterView(CreateView):
     def post(self, request, *args, **kwargs):
         translation.activate("pl")
         return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        send_confirmational_email(self.object)
+        return response
 
 
 class LogoutView_(LogoutView):
