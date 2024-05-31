@@ -92,7 +92,6 @@ class LoginView(View):
 class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = "register.html"
-    success_url = reverse_lazy("landing_page")
 
     def get(self, request, *args, **kwargs):
         translation.activate("pl")
@@ -103,9 +102,19 @@ class RegisterView(CreateView):
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        send_confirmational_email(self.object)
-        return response
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        send_confirmational_email(self.request, user)
+        return render(self.request, "activation_email_confirmation.html")
+
+
+class AccountActivationView(View):
+
+    def get(self, request, *args, **kwargs):
+        uid = kwargs.get("uid")
+        token = kwargs.get("token")
+        return render(request, "account_activation.html")
 
 
 class LogoutView_(LogoutView):

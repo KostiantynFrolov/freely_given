@@ -3,7 +3,7 @@ from django.urls import path
 from .views import (AddDonationView, ChangeUserDataView,
                     ChangeUserPasswordView, LandingPageView, LoginView,
                     LogoutView_, PasswordConfirmView, RegisterView,
-                    UserPageView)
+                    UserPageView, AccountActivationView)
 
 urlpatterns = [
     path("", LandingPageView.as_view(), name="landing_page"),
@@ -16,5 +16,6 @@ urlpatterns = [
     path("change-user-data/", ChangeUserDataView.as_view(), name="change_user_data"),
     path("change-user-password/",
          ChangeUserPasswordView.as_view(),
-         name="change_user_password")
+         name="change_user_password"),
+    path("account-activation/<uid>/<token>/", AccountActivationView.as_view(), name="account_activation")
 ]
