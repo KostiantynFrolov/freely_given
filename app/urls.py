@@ -17,5 +17,7 @@ urlpatterns = [
     path("change-user-password/",
          ChangeUserPasswordView.as_view(),
          name="change_user_password"),
-    path("account-activation/<uid>/<token>/", AccountActivationView.as_view(), name="account_activation")
+    path("account-activation/<uid>/<token>/",
+         AccountActivationView.as_view(),
+         name="account_activation")
 ]

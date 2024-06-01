@@ -22,7 +22,11 @@
 
       <div class="slogan container container--70">
         <h3 style="font-size: 16px;">
+          {% if user and user.is_active %}
           <p>Konto jest aktywowane!</p>
+          {% else %}
+          <p>Konto nie jest aktywowane!</p>
+          {% endif %}
         </h3>
       </div>
     </header>
