@@ -3,7 +3,8 @@ from django.urls import path
 from .views import (AddDonationView, ChangeUserDataView,
                     ChangeUserPasswordView, LandingPageView, LoginView,
                     LogoutView_, PasswordConfirmView, RegisterView,
-                    UserPageView, AccountActivationView)
+                    UserPageView, AccountActivationView, ForgotPasswordView,
+                    ResetPasswordView)
 
 urlpatterns = [
     path("", LandingPageView.as_view(), name="landing_page"),
@@ -19,5 +20,9 @@ urlpatterns = [
          name="change_user_password"),
     path("account-activation/<uid>/<token>/",
          AccountActivationView.as_view(),
-         name="account_activation")
+         name="account_activation"),
+    path("forgot-password/", ForgotPasswordView.as_view(), name="forgot_password"),
+    path("reset-password/<uid>/<token>/",
+         ResetPasswordView.as_view(),
+         name="reset_password")
 ]

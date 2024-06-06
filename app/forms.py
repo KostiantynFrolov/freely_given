@@ -33,3 +33,11 @@ class LoginForm(PasswordConfirmForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["username"].widget.attrs["placeholder"] = "Email"
+
+
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField(max_length=50)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["email"].widget.attrs["placeholder"] = "Email"

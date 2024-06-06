@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -14,8 +15,8 @@ from django.utils.http import urlsafe_base64_decode
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 
-from .forms import LoginForm, PasswordConfirmForm, RegisterForm
-from .emails import send_confirmational_email
+from .forms import LoginForm, PasswordConfirmForm, RegisterForm, ForgotPasswordForm
+from .emails import send_confirmational_email, send_password_reset_email
 from .models import Category, Donation, Institution
 
 
@@ -84,7 +85,7 @@ class LoginView(View):
                     login(request, user)
                     return redirect("landing_page")
                 else:
-                    messages.error(request, "Invalid username or password!")
+                    messages.error(request, "Nieprawidłowy użytkownik albo hasło!")
                     return render(request, self.html, {"form": self.form})
             else:
                 return redirect("register")
@@ -121,10 +122,68 @@ class AccountActivationView(View):
             user = User.objects.get(pk=uid)
         except:
             user = None
-        if user and default_token_generator.check_token(user, token):
+        token_validity = default_token_generator.check_token(user, token)
+        if user and token_validity:
             user.is_active = True
             user.save()
-        return render(request, "account_activation.html", {"user": user})
+        return render(request, "account_activation.html", {"user": user,
+                                                           "token_validity": token_validity})
+
+
+class ForgotPasswordView(View):
+    form = ForgotPasswordForm
+    html = "forgot_password.html"
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.html, {"form": self.form})
+
+    def post(self, request, *args, **kwargs):
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            user = User.objects.filter(username=email)
+            if user:
+                user = user.first()
+                send_password_reset_email(self.request, user)
+                return render(request, "reset_password_email_confirmation.html")
+            else:
+                messages.error(self.request, "Emaila nie ma w bazie danych!")
+                return render(self.request, self.html, {"form": form})
+        else:
+            return render(request, self.html, {"form": self.form})
+
+
+class ResetPasswordView(View):
+    html = "reset_password.html"
+    form = SetPasswordForm
+
+    def get(self, request, *args, **kwargs):
+        translation.activate("pl")
+        uid = force_str(urlsafe_base64_decode(kwargs.get("uid")))
+        token = kwargs.get("token")
+        try:
+            user = User.objects.get(pk=uid)
+        except:
+            user = None
+        token_validity = default_token_generator.check_token(user, token)
+        if user and token_validity:
+            return render(request, self.html, {"form": self.form(user=user)})
+        else:
+            return render(request, "reset_password_failed.html", {"user": user,
+                                                                  "token_validity": token_validity})
+
+    def post(self, request, *args, **kwargs):
+        translation.activate("pl")
+        uid = force_str(urlsafe_base64_decode(kwargs.get("uid")))
+        user = User.objects.get(pk=uid)
+        form = SetPasswordForm(user=user, data=request.POST)
+        if form.is_valid():
+            new_password = form.cleaned_data["new_password1"]
+            user.set_password(new_password)
+            user.save()
+            return render(request, "reset_password_confirmation.html")
+        else:
+            return render(request, self.html, {"form": form})
 
 
 class LogoutView_(LogoutView):
