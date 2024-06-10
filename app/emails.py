@@ -12,7 +12,7 @@ def send_confirmational_email(request, user):
 
     subject = "Witamy na naszej stronie!"
     activation_link = f"http://{settings.ALLOWED_HOSTS[-1]}:8000{reverse('account_activation', kwargs={'uid': uid, 'token': token})}"
-    message = f"Dziękujemy, że do nas dołączyłeś!\n Aby aktywować konto, kliknij w link poniżej.\n\n {activation_link} "
+    message = f"Dziękujemy, że do nas dołączyłeś!\nAby aktywować konto, kliknij w link poniżej.\n\n {activation_link} "
     send_mail(subject, message, settings.EMAIL_HOST_USER, [user.username])
 
 

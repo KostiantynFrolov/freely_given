@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -15,7 +14,8 @@ from django.utils.http import urlsafe_base64_decode
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 
-from .forms import LoginForm, PasswordConfirmForm, RegisterForm, ForgotPasswordForm
+from .forms import (LoginForm, PasswordConfirmForm, RegisterForm, ForgotPasswordForm,
+                    ResetPasswordForm, CustomPasswordChangeForm)
 from .emails import send_confirmational_email, send_password_reset_email
 from .models import Category, Donation, Institution
 
@@ -145,7 +145,7 @@ class ForgotPasswordView(View):
             if user:
                 user = user.first()
                 send_password_reset_email(self.request, user)
-                return render(request, "reset_password_email_confirmation.html")
+                return render(request, "sending_reset_password_link_confirmation.html")
             else:
                 messages.error(self.request, "Emaila nie ma w bazie danych!")
                 return render(self.request, self.html, {"form": form})
@@ -154,8 +154,8 @@ class ForgotPasswordView(View):
 
 
 class ResetPasswordView(View):
+    form = ResetPasswordForm
     html = "reset_password.html"
-    form = SetPasswordForm
 
     def get(self, request, *args, **kwargs):
         translation.activate("pl")
@@ -167,7 +167,7 @@ class ResetPasswordView(View):
             user = None
         token_validity = default_token_generator.check_token(user, token)
         if user and token_validity:
-            return render(request, self.html, {"form": self.form(user=user)})
+            return render(request, self.html, {"form": self.form})
         else:
             return render(request, "reset_password_failed.html", {"user": user,
                                                                   "token_validity": token_validity})
@@ -176,9 +176,9 @@ class ResetPasswordView(View):
         translation.activate("pl")
         uid = force_str(urlsafe_base64_decode(kwargs.get("uid")))
         user = User.objects.get(pk=uid)
-        form = SetPasswordForm(user=user, data=request.POST)
+        form = ResetPasswordForm(request.POST)
         if form.is_valid():
-            new_password = form.cleaned_data["new_password1"]
+            new_password = form.cleaned_data["password1"]
             user.set_password(new_password)
             user.save()
             return render(request, "reset_password_confirmation.html")
@@ -234,6 +234,8 @@ class ChangeUserDataView(LoginRequiredMixin, UpdateView):
 class ChangeUserPasswordView(LoginRequiredMixin, PasswordChangeView):
     template_name = "change_user_password.html"
     success_url = reverse_lazy("user_page")
+    form_class = CustomPasswordChangeForm
+
 
     def get(self, request, *args, **kwargs):
         translation.activate("pl")
