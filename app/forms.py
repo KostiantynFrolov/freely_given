@@ -75,4 +75,18 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         return validate_password(new_password1)
 
 
+class SendMailToSuperusersForm(forms.Form):
+    name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
+        "placeholder": "Imię"}))
+    surname = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
+        "placeholder": "Nazwiśko"}))
+    message = forms.CharField(widget=forms.Textarea(attrs={
+        "rows": 1, "placeholder": "Wiadomość"}))
+
+
+
+
+
+
+
 

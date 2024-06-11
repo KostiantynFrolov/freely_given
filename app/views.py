@@ -15,7 +15,7 @@ from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 
 from .forms import (LoginForm, PasswordConfirmForm, RegisterForm, ForgotPasswordForm,
-                    ResetPasswordForm, CustomPasswordChangeForm)
+                    ResetPasswordForm, CustomPasswordChangeForm, SendMailToSuperusersForm)
 from .emails import send_confirmational_email, send_password_reset_email
 from .models import Category, Donation, Institution
 
@@ -28,12 +28,14 @@ class LandingPageView(View):
         foundations_all = Institution.objects.filter(type="f")
         non_gov_organizations_all = Institution.objects.filter(type="ngo")
         local_collections_all = Institution.objects.filter(type="lc")
+        form = SendMailToSuperusersForm()
         return render(request, "index.html",
                       {"donated_bags_sum": donated_bags_sum,
                        "donated_institutions_sum": donated_institutions_sum,
                        "foundations_all": foundations_all,
                        "non_gov_organizations_all": non_gov_organizations_all,
-                       "local_collections_all": local_collections_all})
+                       "local_collections_all": local_collections_all,
+                       "form": form})
 
 
 class AddDonationView(LoginRequiredMixin, View):
@@ -244,3 +246,8 @@ class ChangeUserPasswordView(LoginRequiredMixin, PasswordChangeView):
     def post(self, request, *args, **kwargs):
         translation.activate("pl")
         return super().post(request, *args, **kwargs)
+
+
+class SendMailToSuperusersView(View):
+    form = SendMailToSuperusersForm
+    pass

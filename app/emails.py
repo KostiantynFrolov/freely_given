@@ -26,3 +26,10 @@ def send_password_reset_email(request, user):
     send_mail(subject, message, settings.EMAIL_HOST_USER, [user.username])
 
 
+"""def send_mail_to_superusers(request, ):
+    send_mail(
+        subject="Mail od użytkownika strony",
+        message
+    )"""
+
+

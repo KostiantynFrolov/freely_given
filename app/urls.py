@@ -4,7 +4,7 @@ from .views import (AddDonationView, ChangeUserDataView,
                     ChangeUserPasswordView, LandingPageView, LoginView,
                     LogoutView_, PasswordConfirmView, RegisterView,
                     UserPageView, AccountActivationView, ForgotPasswordView,
-                    ResetPasswordView)
+                    ResetPasswordView, SendMailToSuperusersView)
 
 urlpatterns = [
     path("", LandingPageView.as_view(), name="landing_page"),
@@ -24,5 +24,6 @@ urlpatterns = [
     path("forgot-password/", ForgotPasswordView.as_view(), name="forgot_password"),
     path("reset-password/<uid>/<token>/",
          ResetPasswordView.as_view(),
-         name="reset_password")
+         name="reset_password"),
+    path("send-mail-to-superusers", SendMailToSuperusersView.as_view(), name="send_mail_to_superusers")
 ]
