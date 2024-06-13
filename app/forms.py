@@ -45,19 +45,14 @@ class RegisterForm(ResetPasswordForm):
 
 
 class PasswordConfirmForm(forms.Form):
-    password = forms.CharField(max_length=50, widget=forms.PasswordInput())
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["password"].widget.attrs["placeholder"] = "Hasło"
+    password = forms.CharField(max_length=50, widget=forms.PasswordInput(attrs={
+        "placeholder": "Hasło"}))
 
 
 class LoginForm(PasswordConfirmForm):
-    username = forms.CharField(max_length=50)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["username"].widget.attrs["placeholder"] = "Email"
+    username = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
+        "placeholder": "Email"
+    }))
 
 
 class ForgotPasswordForm(forms.Form):

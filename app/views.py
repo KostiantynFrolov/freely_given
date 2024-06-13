@@ -16,7 +16,7 @@ from django.views.generic import CreateView, FormView, UpdateView
 
 from .forms import (LoginForm, PasswordConfirmForm, RegisterForm, ForgotPasswordForm,
                     ResetPasswordForm, CustomPasswordChangeForm, SendMailToSuperusersForm)
-from .emails import send_confirmational_email, send_password_reset_email
+from .emails import send_confirmation_email, send_password_reset_email, send_mail_to_superusers
 from .models import Category, Donation, Institution
 
 
@@ -28,14 +28,12 @@ class LandingPageView(View):
         foundations_all = Institution.objects.filter(type="f")
         non_gov_organizations_all = Institution.objects.filter(type="ngo")
         local_collections_all = Institution.objects.filter(type="lc")
-        form = SendMailToSuperusersForm()
         return render(request, "index.html",
                       {"donated_bags_sum": donated_bags_sum,
                        "donated_institutions_sum": donated_institutions_sum,
                        "foundations_all": foundations_all,
                        "non_gov_organizations_all": non_gov_organizations_all,
-                       "local_collections_all": local_collections_all,
-                       "form": form})
+                       "local_collections_all": local_collections_all})
 
 
 class AddDonationView(LoginRequiredMixin, View):
@@ -111,7 +109,7 @@ class RegisterView(CreateView):
         user = form.save(commit=False)
         user.is_active = False
         user.save()
-        send_confirmational_email(self.request, user)
+        send_confirmation_email(self.request, user)
         return render(self.request, "activation_email_confirmation.html")
 
 
@@ -250,4 +248,17 @@ class ChangeUserPasswordView(LoginRequiredMixin, PasswordChangeView):
 
 class SendMailToSuperusersView(View):
     form = SendMailToSuperusersForm
-    pass
+
+    def post(self, request, *args, **kwargs):
+        translation.activate("pl")
+        form = SendMailToSuperusersForm(request.POST)
+        if form.is_valid():
+            send_mail_to_superusers(
+                self.request,
+                first_name=form.cleaned_data["name"],
+                last_name=form.cleaned_data["surname"],
+                message=form.cleaned_data["message"],
+                superusers=User.objects.filter(is_superuser=True).values_list("username", flat=True))
+            return render(request, "sending_email_to_superusers_confirmation.html")
+        else:
+            return render(request, "index.html", {"form": form})

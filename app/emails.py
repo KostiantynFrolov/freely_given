@@ -6,13 +6,13 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 
 
-def send_confirmational_email(request, user):
+def send_confirmation_email(request, user):
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
 
     subject = "Witamy na naszej stronie!"
     activation_link = f"http://{settings.ALLOWED_HOSTS[-1]}:8000{reverse('account_activation', kwargs={'uid': uid, 'token': token})}"
-    message = f"Dziękujemy, że do nas dołączyłeś!\nAby aktywować konto, kliknij w link poniżej.\n\n {activation_link} "
+    message = f"Dziękujemy, że do nas dołączyłeś!\nAby aktywować konto, kliknij w link poniżej:\n\n {activation_link} "
     send_mail(subject, message, settings.EMAIL_HOST_USER, [user.username])
 
 
@@ -22,14 +22,15 @@ def send_password_reset_email(request, user):
 
     subject = "Resetowanie hasła"
     reset_password_link = f"http://{settings.ALLOWED_HOSTS[-1]}:8000{reverse('reset_password', kwargs={'uid': uid, 'token': token})}"
-    message = f"Aby zmienić hasło, kliknij w link poniżej.\n\n {reset_password_link} "
+    message = f"Aby zmienić hasło, kliknij w link poniżej:\n\n {reset_password_link} "
     send_mail(subject, message, settings.EMAIL_HOST_USER, [user.username])
 
 
-"""def send_mail_to_superusers(request, ):
+def send_mail_to_superusers(request, first_name, last_name, message, superusers):
     send_mail(
-        subject="Mail od użytkownika strony",
-        message
-    )"""
+        subject=f"Użytkownik {first_name} {last_name} wysłał wiadomość.",
+        message=message,
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=superusers)
 
 

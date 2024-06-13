@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'app.context_processors.add_mail_form_to_context'
             ],
         },
     },
@@ -140,7 +141,5 @@ EMAIL_PORT = int(env("EMAIL_PORT"))
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = env("EMAIL_HOST_USER")
-SERVER_EMAIL = env("EMAIL_HOST_USER")
 
 SITE_ID = 4
