@@ -106,13 +106,18 @@
       <h2>Komu pomagamy?</h2>
 
       <ul class="help--buttons">
-        <li data-id="1"><a href="#" class="btn btn--without-border active">Fundacjom</a></li>
-        <li data-id="2"><a href="#" class="btn btn--without-border">Organizacjom pozarządowym</a></li>
-        <li data-id="3"><a href="#" class="btn btn--without-border">Lokalnym zbiórkom</a></li>
+        <li data-id="1">
+            <a href="#slide1" class="btn btn--without-border active slide-button">Fundacjom</a>
+        </li>
+        <li data-id="2">
+            <a href="#slide2" class="btn btn--without-border slide-button">Organizacjom pozarządowym</a>
+        </li>
+        <li data-id="3">
+            <a href="#slide3" class="btn btn--without-border slide-button">Lokalnym zbiórkom</a></li>
       </ul>
 
       <!-- SLIDE 1 -->
-      <div class="help--slides active" data-id="1">
+      <div id="slide1" class="help--slides active" data-id="1">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
         <ul class="help--slides-items">
           {% for foundation in foundations_all %}
@@ -127,20 +132,18 @@
             </li>
           {% endfor %}
         </ul>
-        <!-- Pagination
         <ul class="help--slides-pagination">
-          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
+          <span class="step-links">
+          </span>
         </ul>
-        -->
+
       </div>
 
       <!-- SLIDE 2 -->
-      <div class="help--slides" data-id="2">
+      <div id="slide2" class="help--slides" data-id="2">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Organizacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
         <ul class="help--slides-items">
-          {% for  non_gov_organization in non_gov_organizations_all%}
+          {% for non_gov_organization in non_gov_page %}
             <li>
               <div class="col">
                 <div class="title">{{ non_gov_organization.name }}</div>
@@ -152,20 +155,26 @@
             </li>
           {% endfor %}
         </ul>
-
-        <!-- Pagination
         <ul class="help--slides-pagination">
-          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="4">4</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="5">5</a></li>
+          <span class="step-links">
+            {% if non_gov_page.has_previous %}
+              <a href="?non_gov_page={{ non_gov_page.previous_page_number }}#help" class="btn btn--without-border pagination-btn"
+              data-page="{{ non_gov_page.previous_page_number }}">{{ non_gov_page.previous_page_number }}</a>
+            {% endif %}
+            <span class="current btn btn--without-border pagination-btn">
+               {{ non_gov_page.number }}
+            </span>
+            {% if non_gov_page.has_next %}
+              <a href="?non_gov_page={{ non_gov_page.next_page_number }}#help" class="btn btn--without-border pagination-btn"
+              data-page="{{ non_gov_page.next_page_number }}">{{ non_gov_page.next_page_number }}</a>
+            {% endif %}
+          </span>
         </ul>
-        -->
+
       </div>
 
       <!-- SLIDE 3 -->
-      <div class="help--slides" data-id="3">
+      <div id="slide3" class="help--slides" data-id="3">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Lokalnych zbiórek, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
         <ul class="help--slides-items">
           {% for local_collection in local_collections_all %}

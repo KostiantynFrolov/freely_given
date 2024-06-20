@@ -36,8 +36,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     changeSlide(e) {
-      e.preventDefault();
+
       const $btn = e.target;
+      if($btn.classList.contains("slide-btn")) {
+        return;
+      }
+      e.preventDefault();
 
       // Buttons Active class change
       [...this.$buttonsContainer.children].forEach(btn => btn.firstElementChild.classList.remove("active"));
@@ -60,10 +64,16 @@ document.addEventListener("DOMContentLoaded", function() {
      * TODO: callback to page change event
      */
     changePage(e) {
-      e.preventDefault();
+     e.preventDefault();
       const page = e.target.dataset.page;
 
-      console.log(page);
+      const baseUrl = window.location.pathname;
+      const urlParams = new URLSearchParams(window.location.search);
+      urlParams.set('non_gov_page', page);
+      const newUrl = `${baseUrl}?${urlParams.toString()}#help`;
+
+      window.location.href = newUrl;
+
     }
   }
   const helpSection = document.querySelector(".help");

@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LogoutView, PasswordChangeView
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Sum
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -26,13 +27,19 @@ class LandingPageView(View):
         donated_institutions_sum = (Donation.objects.
                                     values("institution_id").distinct().count())
         foundations_all = Institution.objects.filter(type="f")
+
         non_gov_organizations_all = Institution.objects.filter(type="ngo")
+        non_gov_paginator = Paginator(non_gov_organizations_all, 5)
+        non_gov_page_number = request.GET.get("non_gov_page", default=1)
+        non_gov_page = non_gov_paginator.get_page(non_gov_page_number)
+
         local_collections_all = Institution.objects.filter(type="lc")
+
         return render(request, "index.html",
                       {"donated_bags_sum": donated_bags_sum,
                        "donated_institutions_sum": donated_institutions_sum,
                        "foundations_all": foundations_all,
-                       "non_gov_organizations_all": non_gov_organizations_all,
+                       "non_gov_page": non_gov_page,
                        "local_collections_all": local_collections_all})
 
 
