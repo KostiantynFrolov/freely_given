@@ -26,7 +26,11 @@ class LandingPageView(View):
         donated_bags_sum = Donation.objects.aggregate(Sum("quantity"))["quantity__sum"]
         donated_institutions_sum = (Donation.objects.
                                     values("institution_id").distinct().count())
+
         foundations_all = Institution.objects.filter(type="f")
+        foundations_paginator = Paginator(foundations_all, 5)
+        foundations_page_number = request.GET.get("foundations_page", default=1)
+        foundations_page = foundations_paginator.get_page(foundations_page_number)
 
         non_gov_organizations_all = Institution.objects.filter(type="ngo")
         non_gov_paginator = Paginator(non_gov_organizations_all, 5)
@@ -34,13 +38,23 @@ class LandingPageView(View):
         non_gov_page = non_gov_paginator.get_page(non_gov_page_number)
 
         local_collections_all = Institution.objects.filter(type="lc")
+        local_paginator = Paginator(local_collections_all, 5)
+        local_page_number = request.GET.get("local_page", default=1)
+        local_page = local_paginator.get_page(local_page_number)
 
+        if request.GET.get("non_gov_page"):
+            slide = 2
+        elif request.GET.get("local_page"):
+            slide = 3
+        else:
+            slide = 1
         return render(request, "index.html",
                       {"donated_bags_sum": donated_bags_sum,
                        "donated_institutions_sum": donated_institutions_sum,
-                       "foundations_all": foundations_all,
+                       "foundations_page": foundations_page,
                        "non_gov_page": non_gov_page,
-                       "local_collections_all": local_collections_all})
+                       "local_page": local_page,
+                       "slide": slide})
 
 
 class AddDonationView(LoginRequiredMixin, View):

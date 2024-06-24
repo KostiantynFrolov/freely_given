@@ -107,20 +107,20 @@
 
       <ul class="help--buttons">
         <li data-id="1">
-            <a href="#slide1" class="btn btn--without-border active slide-button">Fundacjom</a>
+            <a href="#" class="btn btn--without-border {% if slide == 1 %}active{% endif %} slide-button">Fundacjom</a>
         </li>
         <li data-id="2">
-            <a href="#slide2" class="btn btn--without-border slide-button">Organizacjom pozarządowym</a>
+            <a href="#" class="btn btn--without-border {% if slide == 2 %}active{% endif %} slide-button">Organizacjom pozarządowym</a>
         </li>
         <li data-id="3">
-            <a href="#slide3" class="btn btn--without-border slide-button">Lokalnym zbiórkom</a></li>
+            <a href="#" class="btn btn--without-border {% if slide == 3 %}active{% endif %} slide-button">Lokalnym zbiórkom</a></li>
       </ul>
 
       <!-- SLIDE 1 -->
-      <div id="slide1" class="help--slides active" data-id="1">
+      <div class="help--slides {% if slide == 1 %}active{% endif %}" data-id="1">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
         <ul class="help--slides-items">
-          {% for foundation in foundations_all %}
+          {% for foundation in foundations_page %}
             <li>
               <div class="col">
                 <div class="title">{{ foundation.name }}</div>
@@ -134,13 +134,21 @@
         </ul>
         <ul class="help--slides-pagination">
           <span class="step-links">
+            {% if foundations_page.has_previous %}
+              <a href="?foundations_page={{ foundations_page.previous_page_number }}#help">{{ foundations_page.previous_page_number }}</a>
+            {% endif %}
+            <span class="current btn btn--without-border pagination-btn">
+               {{ foundations_page.number }}
+            </span>
+            {% if foundations_page.has_next %}
+              <a href="?foundations_page={{ foundations_page.next_page_number }}#help">{{ foundations_page.next_page_number }}</a>
+            {% endif %}
           </span>
         </ul>
-
       </div>
 
       <!-- SLIDE 2 -->
-      <div id="slide2" class="help--slides" data-id="2">
+      <div class="help--slides {% if slide == 2 %}active{% endif %}" data-id="2">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Organizacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
         <ul class="help--slides-items">
           {% for non_gov_organization in non_gov_page %}
@@ -158,15 +166,13 @@
         <ul class="help--slides-pagination">
           <span class="step-links">
             {% if non_gov_page.has_previous %}
-              <a href="?non_gov_page={{ non_gov_page.previous_page_number }}#help" class="btn btn--without-border pagination-btn"
-              data-page="{{ non_gov_page.previous_page_number }}">{{ non_gov_page.previous_page_number }}</a>
+              <a href="?non_gov_page={{ non_gov_page.previous_page_number }}#help">{{ non_gov_page.previous_page_number }}</a>
             {% endif %}
             <span class="current btn btn--without-border pagination-btn">
                {{ non_gov_page.number }}
             </span>
             {% if non_gov_page.has_next %}
-              <a href="?non_gov_page={{ non_gov_page.next_page_number }}#help" class="btn btn--without-border pagination-btn"
-              data-page="{{ non_gov_page.next_page_number }}">{{ non_gov_page.next_page_number }}</a>
+              <a href="?non_gov_page={{ non_gov_page.next_page_number }}#help">{{ non_gov_page.next_page_number }}</a>
             {% endif %}
           </span>
         </ul>
@@ -174,10 +180,10 @@
       </div>
 
       <!-- SLIDE 3 -->
-      <div id="slide3" class="help--slides" data-id="3">
+      <div class="help--slides {% if slide == 3 %}active{% endif %}" data-id="3">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Lokalnych zbiórek, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
         <ul class="help--slides-items">
-          {% for local_collection in local_collections_all %}
+          {% for local_collection in local_page %}
             <li>
               <div class="col">
                 <div class="title">{{ local_collection.name }}</div>
@@ -189,13 +195,19 @@
             </li>
           {% endfor %}
         </ul>
-
-        <!-- Pagination
         <ul class="help--slides-pagination">
-          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
+          <span class="step-links">
+            {% if local_page.has_previous %}
+              <a href="?local_page={{ local_page.previous_page_number }}#help">{{ local_page.previous_page_number }}</a>
+            {% endif %}
+            <span class="current btn btn--without-border pagination-btn">
+               {{ local_page.number }}
+            </span>
+            {% if local_page.has_next %}
+              <a href="?local_page={{ local_page.next_page_number }}#help">{{ local_page.next_page_number }}</a>
+            {% endif %}
+          </span>
         </ul>
-        -->
       </div>
     </section>
 {% endblock main %}

@@ -67,12 +67,6 @@ document.addEventListener("DOMContentLoaded", function() {
      e.preventDefault();
       const page = e.target.dataset.page;
 
-      const baseUrl = window.location.pathname;
-      const urlParams = new URLSearchParams(window.location.search);
-      urlParams.set('non_gov_page', page);
-      const newUrl = `${baseUrl}?${urlParams.toString()}#help`;
-
-      window.location.href = newUrl;
 
     }
   }
