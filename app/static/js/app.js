@@ -306,33 +306,7 @@ document.addEventListener("DOMContentLoaded", function() {
         btn.addEventListener("click", e => {
           e.preventDefault();
           this.currentStep--;
-          if (this.currentStep === 1) {
-            let selectedCategories = this.$form.querySelectorAll("input[name='categories']:checked");
-            this.formData.categories = selectedCategories.length > 0 ?
-                Array.from(selectedCategories).map(checkbox => checkbox.value).join(", ") : "";
-            }
-          if (this.currentStep === 2) {
-            this.formData.bags = this.$form.querySelector("input[name='bags']").value;
-          }
-          if (this.currentStep === 3) {
-            let selectedOrganization = document.querySelector("input[name='organization']:checked")
-            if (selectedOrganization) {
-              let selectedInstitutionDiv = selectedOrganization.parentNode;
-              let institutionName = selectedInstitutionDiv.querySelector(".title").innerText;
-              this.formData.institution = institutionName;
-            } else {
-              this.formData.institution = "";
-            }
-          }
-          if (this.currentStep === 4) {
-            this.formData.street = this.$form.querySelector("input[name='address']").value;
-            this.formData.city = this.$form.querySelector("input[name='city']").value;
-            this.formData.postcode = this.$form.querySelector("input[name='postcode']").value;
-            this.formData.phone = this.$form.querySelector("input[name='phone']").value;
-            this.formData.date = this.$form.querySelector("input[name='data']").value;
-            this.formData.time = this.$form.querySelector("input[name='time']").value;
-            this.formData.info = this.$form.querySelector("textarea[name='more_info']").value;
-          }
+
           this.updateForm();
         });
       });
