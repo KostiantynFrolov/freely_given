@@ -7,6 +7,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LogoutView, PasswordChangeView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Sum
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import translation
@@ -16,7 +17,8 @@ from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 
 from .forms import (LoginForm, PasswordConfirmForm, RegisterForm, ForgotPasswordForm,
-                    ResetPasswordForm, CustomPasswordChangeForm, SendMailToSuperusersForm)
+                    ResetPasswordForm, CustomPasswordChangeForm, SendMailToSuperusersForm,
+                    AddDonationForm)
 from .emails import send_confirmation_email, send_password_reset_email, send_mail_to_superusers
 from .models import Category, Donation, Institution
 
@@ -59,32 +61,33 @@ class LandingPageView(View):
 
 class AddDonationView(LoginRequiredMixin, View):
     login_url = "login"
+    html = "form.html"
+    form = AddDonationForm
 
     def get(self, request, *args, **kwargs):
-        categories_all = Category.objects.all()
-        institutions_all = Institution.objects.all()
-        return render(request, "form.html",
-                      {"categories_all": categories_all,
-                       "institutions_all": institutions_all})
+        return render(request, self.html, {"form": self.form,
+                                           "institutions_full_data": self.form().get_full_institution_data()})
 
     def post(self, request, *args, **kwargs):
-        your_donation = Donation.objects.create(
-            quantity=int(request.POST["bags"]),
-            institution=Institution.objects.get(id=int(request.POST["organization"])),
-            address=request.POST["address"],
-            phone_number=request.POST["phone"],
-            city=request.POST["city"],
-            zip_code=request.POST["postcode"],
-            pick_up_date=request.POST["data"],
-            pick_up_time=request.POST["time"],
-            pick_up_comment=request.POST["more_info"],
-            user=request.user
-            )
-        selected_categories_names = request.POST.getlist("categories")
-        selected_categories = (Category.objects.
-                               filter(name__in=selected_categories_names))
-        your_donation.categories.set(selected_categories)
-        return render(request, "form-confirmation.html")
+        form = AddDonationForm(request.POST)
+        if form.is_valid():
+            your_donation = Donation.objects.create(
+                quantity=form.cleaned_data["quantity"],
+                institution=form.cleaned_data["institution"],
+                address=form.cleaned_data["address"],
+                phone_number=form.cleaned_data["phone_number"],
+                city=form.cleaned_data["city"],
+                zip_code=form.cleaned_data["zip_code"],
+                pick_up_date=form.cleaned_data["pick_up_date"],
+                pick_up_time=form.cleaned_data["pick_up_time"],
+                pick_up_comment=form.cleaned_data["pick_up_comment"],
+                user=request.user)
+            selected_categories = form.cleaned_data["categories"]
+            your_donation.categories.set(selected_categories)
+            return render(request, "form-confirmation.html")
+        else:
+            return render(request, self.html, {"form": form,
+                                               "institutions_full_data": self.form().get_full_institution_data()})
 
 
 class LoginView(View):

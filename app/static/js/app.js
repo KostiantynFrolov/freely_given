@@ -106,11 +106,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
   const toggleInstitutionVisibility = function () {
+    const selectedCategories = checkboxListener.checkedValues;
     document.querySelectorAll(".form-group--checkbox-step3").
     forEach(function (institutionDiv) {
       const institutionCategories = institutionDiv.dataset.categories
           ? institutionDiv.dataset.categories.split(','):[];
-      if (institutionCategories.some(category => checkboxListener.checkedValues.includes(category))) {
+      if (selectedCategories.length > 0 && selectedCategories.every(category => institutionCategories.includes(category))) {
         institutionDiv.style.display = "block";
       } else {
         institutionDiv.style.display = "none";
@@ -251,12 +252,14 @@ document.addEventListener("DOMContentLoaded", function() {
             let selectedCategories = this.$form.querySelectorAll("input[name='categories']:checked");
             this.formData.categories = selectedCategories.length > 0 ?
                 Array.from(selectedCategories).map(checkbox => checkbox.value).join(", ") : "";
+            this.formData.categoriesNames = selectedCategories.length > 0 ?
+                Array.from(selectedCategories).map(checkbox => checkbox.dataset.categoryName).join(", ") : "";
             }
           if (this.currentStep === 3) {
-            this.formData.bags = this.$form.querySelector("input[name='bags']").value;
+            this.formData.bags = this.$form.querySelector("input[name='quantity']").value;
           }
          if (this.currentStep === 4) {
-            let selectedOrganization = document.querySelector("input[name='organization']:checked");
+            let selectedOrganization = document.querySelector("input[name='institution']:checked");
             if (selectedOrganization) {
               let selectedInstitutionDiv = selectedOrganization.parentNode;
               let institutionName = selectedInstitutionDiv.querySelector(".title").innerText;
@@ -268,11 +271,11 @@ document.addEventListener("DOMContentLoaded", function() {
           if (this.currentStep === 5) {
             this.formData.street = this.$form.querySelector("input[name='address']").value;
             this.formData.city = this.$form.querySelector("input[name='city']").value;
-            this.formData.postcode = this.$form.querySelector("input[name='postcode']").value;
-            this.formData.phone = this.$form.querySelector("input[name='phone']").value;
-            this.formData.date = this.$form.querySelector("input[name='data']").value;
-            this.formData.time = this.$form.querySelector("input[name='time']").value;
-            this.formData.info = this.$form.querySelector("textarea[name='more_info']").value;
+            this.formData.postcode = this.$form.querySelector("input[name='zip_code']").value;
+            this.formData.phone = this.$form.querySelector("input[name='phone_number']").value;
+            this.formData.date = this.$form.querySelector("input[name='pick_up_date']").value;
+            this.formData.time = this.$form.querySelector("input[name='pick_up_time']").value;
+            this.formData.info = this.$form.querySelector("textarea[name='pick_up_comment']").value;
 
             let bagsText = "";
             switch (true) {
@@ -286,7 +289,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 bagsText = " worków";
             }
             document.getElementById("bags-summary").innerHTML =
-                "Oddajesz: " + this.formData.categories + " - " + this.formData.bags + bagsText;
+                "Oddajesz: " + this.formData.categoriesNames + " - " + this.formData.bags + bagsText;
             document.getElementById("institution-summary").innerHTML =
                 "Odbiorca: " + this.formData.institution;
             document.getElementById("pick-up-street").innerHTML = this.formData.street;
@@ -306,7 +309,6 @@ document.addEventListener("DOMContentLoaded", function() {
         btn.addEventListener("click", e => {
           e.preventDefault();
           this.currentStep--;
-
           this.updateForm();
         });
       });

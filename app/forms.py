@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from .models import Donation, Institution
 
 
 def validate_password(password):
@@ -77,6 +78,32 @@ class SendMailToSuperusersForm(forms.Form):
         "placeholder": "Nazwiśko"}))
     message = forms.CharField(widget=forms.Textarea(attrs={
         "rows": 1, "placeholder": "Wiadomość"}))
+
+
+class AddDonationForm(forms.ModelForm):
+    class Meta:
+        model = Donation
+        exclude = ("user",)
+        widgets = {
+            "categories": forms.CheckboxSelectMultiple(),
+            "pick_up_date": forms.DateInput(attrs={"type": "date"}),
+            "pick_up_time": forms.TimeInput(attrs={"type": "time"}),
+            "pick_up_comment": forms.Textarea(attrs={"rows": 5})
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["quantity"].widget.attrs.update({
+            "min": "1", "value": "1"})
+
+    def get_full_institution_data(self):
+        institutions_all = Institution.objects.all()
+        institutions_categories = [list(institution.categories.all().values_list('id', flat=True))
+                                   for institution in institutions_all]
+        institutions_full_data = zip(institutions_all, institutions_categories)
+        return institutions_full_data
+
+
 
 
 
