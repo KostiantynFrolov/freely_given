@@ -71,19 +71,10 @@ class AddDonationView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         form = AddDonationForm(request.POST)
         if form.is_valid():
-            your_donation = Donation.objects.create(
-                quantity=form.cleaned_data["quantity"],
-                institution=form.cleaned_data["institution"],
-                address=form.cleaned_data["address"],
-                phone_number=form.cleaned_data["phone_number"],
-                city=form.cleaned_data["city"],
-                zip_code=form.cleaned_data["zip_code"],
-                pick_up_date=form.cleaned_data["pick_up_date"],
-                pick_up_time=form.cleaned_data["pick_up_time"],
-                pick_up_comment=form.cleaned_data["pick_up_comment"],
-                user=request.user)
-            selected_categories = form.cleaned_data["categories"]
-            your_donation.categories.set(selected_categories)
+            your_donation = form.save(commit=False)
+            your_donation.user = request.user
+            your_donation.save()
+            form.save_m2m()
             return render(request, "form-confirmation.html")
         else:
             return render(request, self.html, {"form": form,

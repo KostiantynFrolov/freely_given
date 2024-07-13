@@ -21,7 +21,7 @@ def validate_password(password):
 class ResetPasswordForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ("password1", "password2")
+        fields = ["password1", "password2"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -36,7 +36,7 @@ class ResetPasswordForm(UserCreationForm):
 class RegisterForm(ResetPasswordForm):
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "password1", "password2")
+        fields = ["first_name", "last_name", "username", "password1", "password2"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -83,7 +83,7 @@ class SendMailToSuperusersForm(forms.Form):
 class AddDonationForm(forms.ModelForm):
     class Meta:
         model = Donation
-        exclude = ("user",)
+        exclude = ["user"]
         widgets = {
             "categories": forms.CheckboxSelectMultiple(),
             "pick_up_date": forms.DateInput(attrs={"type": "date"}),
