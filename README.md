@@ -1,6 +1,5 @@
-# freely_ given - application
+# freely_ given -items donation application
  
-
 Welcome to my second project, developed to  
 
 ## Table of contents
