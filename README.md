@@ -1,6 +1,6 @@
-# freely_ given -items donation application
+# freely_ given - items donation application
  
-Welcome to my second project, developed to  
+Hello and welcome to my second project, designed to simplify the process of donating items  
 
 ## Table of contents
 * [General info](#general-info)
@@ -8,3 +8,4 @@ Welcome to my second project, developed to
 * [Setup](#setup)
 
 ## General info
+This application is a bridge between generous hearts and those in need, making it easier than ever to contribute to causes close to your heart.
