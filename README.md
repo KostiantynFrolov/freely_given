@@ -17,4 +17,4 @@ Project is created with:
 * Django 4.2.11
 * psycopg2-binary 2.9.9
 * django-environ 0.11.2
-* 
+* JavaScript
