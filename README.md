@@ -8,8 +8,8 @@ Hello and welcome to my second project, designed to simplify the process of dona
 * [Setup](#setup)
 
 ## General info
-This is my Portfolio Lab application, designed to serve as a platform connecting generous individuals with reputable organizations through the donation of unneeded items.
-Its purpose is to simplify the process of giving, enabling anyone to easily support causes they care deeply about.
+This is my Portfolio Lab application,
+designed to facilitate donations of items to trusted foundations, non-governmental organizations, and local collection initiatives.
 
 ## Technologies
 Project is created with:
