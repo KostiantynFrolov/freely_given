@@ -1,6 +1,6 @@
 # freely_ given - items donation application
  
-Hello and welcome to my second project, designed to simplify the process of donating items  
+Hello and welcome to my second project, developed to simplify the process of donating items  
 
 ## Table of contents
 * [General info](#general-info)
@@ -8,8 +8,9 @@ Hello and welcome to my second project, designed to simplify the process of dona
 * [Setup](#setup)
 
 ## General info
-This is my Portfolio Lab application,
-designed to facilitate donations of items to trusted foundations, non-governmental organizations, and local collection initiatives.
+This is my Portfolio Lab project for the Python Developer course at Coders Lab.
+The application designed to facilitate donations of items to trusted foundations, non-governmental organizations, and local collection initiatives.
+A step-by-step form ensures the donation process is clear,easy, and fast.
 
 ## Technologies
 Project is created with:
