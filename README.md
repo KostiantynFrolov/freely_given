@@ -10,7 +10,7 @@ Hello and welcome to my second project, developed to simplify the process of don
 ## General info
 This is my Portfolio Lab project for the Python Developer course at Coders Lab.
 The application designed to facilitate donations of items to trusted foundations, non-governmental organizations, and local collection initiatives.
-A step-by-step form ensures the donation process is clear,easy, and fast.
+A step-by-step form ensures the donation process is clear, easy, and fast.
 
 ## Technologies
 Project is created with:
