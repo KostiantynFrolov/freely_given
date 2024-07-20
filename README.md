@@ -1,4 +1,4 @@
-# freely_ given - items donation application
+# freely_given - items donation application
  
 Hello and welcome to my second project, developed to simplify the process of donating items  
 
@@ -16,9 +16,7 @@ A step-by-step form ensures the donation process is clear, easy, and fast.
 Project is created with:
 * Python 3.8
 * Django 4.2.11
-* psycopg2-binary 2.9.9
-* django-environ 0.11.2
-* JavaScript(ECMAScript 6)
+* JavaScript (ECMAScript 6)
 
 ## Setup
 Prerequisites:
